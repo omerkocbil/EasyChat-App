@@ -1,3 +1,6 @@
+import os
+import __main__
+
 from kivy.animation import Animation
 from kivy.properties import ColorProperty
 
@@ -35,8 +38,8 @@ class LoginScreen(PScreen):
         resp = requests.post(url=LOGIN_POST_API, data=data)
         resp = resp.json()
         
-        if resp['auth']:    
-            with open("assets/users.json") as f:
+        if resp['auth']:
+            with open(__main__.get_path('assets/users.json')) as f:
                 users = json.load(f)
             
             for i, user in enumerate(users['users']):
@@ -66,7 +69,7 @@ class LoginScreen(PScreen):
         print(resp.json())
     
     def write_rsa_keys_users_db(self, index, public_rsa, private_rsa):
-        with open('assets/users.json', 'r+') as file:
+        with open(__main__.get_path('assets/users.json')) as file:
             file_data = json.load(file)
             
             file_data['users'][index]['public_rsa'] = public_rsa

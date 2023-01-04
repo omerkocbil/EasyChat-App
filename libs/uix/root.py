@@ -1,9 +1,9 @@
+import __main__
 import json
 
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager
-
 
 class Root(ScreenManager):
 
@@ -12,7 +12,8 @@ class Root(ScreenManager):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         Window.bind(on_keyboard=self._goto_previous_screen)
-        with open("screens.json") as f:
+
+        with open(__main__.get_path('assets/screens.json')) as f:
             self.screens_data = json.load(f)
 
     def set_current(self, screen_name, side="left", quick=False):

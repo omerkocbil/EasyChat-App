@@ -8,6 +8,8 @@ from key import aes_key as AES
 import requests
 import json
 
+import os
+import __main__
 
 class HomeScreen(PScreen):
 
@@ -58,7 +60,7 @@ class HomeScreen(PScreen):
             self.chats.append(chat_data)
 
     def get_aes_keys(self, chat_id):
-        with open('assets/chats.json') as file:
+        with open(__main__.get_path('assets/chats.json')) as file:
             file_data = json.load(file)
         
         for chat in file_data['chats']:

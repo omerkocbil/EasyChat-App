@@ -1,5 +1,6 @@
 import os
 import sys
+import __main__
 
 root_dir = os.path.split(os.path.abspath(sys.argv[0]))[0]
 sys.path.insert(0, os.path.join(root_dir, "libs", "applibs"))
@@ -26,7 +27,8 @@ class EasyChatApp(App):
         super().__init__(**kwargs)
 
         self.title = "EasyChat"
-        self.icon = "assets/images/logo.png"
+        self.icon = __main__.get_path('assets/images/logo.png')
+
 
         self.theme_cls.theme_style = config.get_theme_style()
 
