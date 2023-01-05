@@ -1,5 +1,5 @@
 Traceback (most recent call last):
-  File "C:\Users\Kinkintama\Documents\GitHub\EasyChat-App\main.py", line 6, in <module>
+  File "C:\Users\Kinkintama\Documents\GitHub\EasyChat-App\main.py", line 16, in <module>
     EasyChatApp().run()
   File "C:\Users\Kinkintama\anaconda3\lib\site-packages\kivy\app.py", line 955, in run
     runTouchApp()
@@ -23,6 +23,10 @@ Traceback (most recent call last):
     exec(__kvlang__.co_value, idmap)
   File "C:\Users\Kinkintama\Documents\GitHub\EasyChat-App\libs\uix\kv\login_screen.kv", line 47, in <module>
     on_release: root.sign_in(username.text, password.text)
-  File "C:\Users\Kinkintama\Documents\GitHub\EasyChat-App\libs\uix\baseclass\login_screen.py", line 58, in sign_in
-    home_screen.user = {'username': username, 'name': name}
-UnboundLocalError: local variable 'name' referenced before assignment
+  File "C:\Users\Kinkintama\Documents\GitHub\EasyChat-App\libs\uix\baseclass\login_screen.py", line 65, in sign_in
+    home_screen.receive()
+  File "C:\Users\Kinkintama\Documents\GitHub\EasyChat-App\libs\uix\baseclass\home_screen.py", line 38, in receive
+    is_exist, message, sender = self.check_notification(chats['id'])
+  File "C:\Users\Kinkintama\Documents\GitHub\EasyChat-App\libs\uix\baseclass\home_screen.py", line 93, in check_notification
+    if resp['notification']:
+KeyError: 'notification'

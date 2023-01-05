@@ -8,7 +8,9 @@ from components.screen import PScreen
 from components.toast import toast
 from key import aes_key as AES
 
-import requests
+import urllib3
+http = urllib3.PoolManager()
+
 import json
 
 
@@ -28,8 +30,9 @@ class ChatScreen(PScreen):
     
     def check_notification(self, time):
         GET_NOTIF_API = "http://54.144.168.5/api/notification/"
-        resp = requests.get(url=GET_NOTIF_API, params={'username': self.user['username']})
-        resp = resp.json()
+
+        resp = http.request('GET', GET_NOTIF_API, fields={'username': self.user['username']})
+        resp = json.loads(resp.data.decode('utf-8'))
         
         if resp['notification']:
             chat = resp['info'].get(str(self.chat['id']))
@@ -43,14 +46,17 @@ class ChatScreen(PScreen):
                     )
         
                 GET_CONV_API = "http://54.144.168.5/api/getgroupchat"
-                resp = requests.get(url=GET_CONV_API, params={'id': self.chat['id'], 'username': self.user['username']})
+
+                resp = http.request('GET', GET_CONV_API, fields={'id': self.chat['id'], 'username': self.user['username']})
+                resp = json.loads(resp.data.decode('utf-8'))
         
         self.scroll_to_bottom()
     
     def get_name_and_title(self, username):
         GET_USER_API = "http://54.144.168.5/api/user"
-        resp = requests.get(url=GET_USER_API)
-        data = resp.json()
+
+        resp = http.request('GET', GET_USER_API)
+        data = json.loads(resp.data.decode('utf-8'))
         
         for user in data:
             if user['username'] == username:
@@ -65,7 +71,8 @@ class ChatScreen(PScreen):
         data = {'chat_id': self.chat['id'],
                 'username': self.user['username'],
                 'message': AES.encrypt(text, self.aes['key'], self.aes['nonce'])}
-        resp = requests.post(url=SEND_MSG_API, data=data)
+
+        resp = http.request('GET', SEND_MSG_API, fields=data)
         
         self.chat_logs.append(
             {"text": '[color=000000]' + text, "send_by_user": True, "pos_hint": {"right": 1}}
@@ -77,9 +84,10 @@ class ChatScreen(PScreen):
     def receive(self, chat_id, is_group):
         if is_group:
             GET_CONV_API = "http://54.144.168.5/api/getgroupchat"
-            resp = requests.get(url=GET_CONV_API, params={'id': chat_id, 'username': self.user['username']})
-            data = resp.json()
-            
+
+            resp = http.request('GET', GET_CONV_API, fields={'id': chat_id, 'username': self.user['username']})
+            data = json.loads(resp.data.decode('utf-8'))
+
             self.partipicant = data['users']
             for message in data['messages']:
                 self.chat_logs.append(

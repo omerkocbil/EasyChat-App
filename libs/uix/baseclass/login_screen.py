@@ -9,7 +9,9 @@ from kivy.clock import Clock
 from components.toast import toast
 from key import rsa_key as RSA
 
-import requests
+import urllib3
+http = urllib3.PoolManager()
+
 import json
 
 
@@ -35,8 +37,9 @@ class LoginScreen(PScreen):
         LOGIN_POST_API = "http://54.144.168.5/api/login/"
         data = {'username': username,
                 'password': password}
-        resp = requests.post(url=LOGIN_POST_API, data=data)
-        resp = resp.json()
+
+        resp = http.request('POST', LOGIN_POST_API, fields=data)
+        resp = json.loads(resp.data.decode('utf-8'))
         
         if resp['auth']:
             with open(__main__.get_path('assets/users.json')) as f:
@@ -65,8 +68,11 @@ class LoginScreen(PScreen):
         UPDATE_USER_API = "http://54.144.168.5/api/user/"
         data = {'username': username,
                 'public_rsa': public_rsa}
-        resp = requests.patch(url=UPDATE_USER_API, data=data)
-        print(resp.json())
+
+        resp = http.request('PATCH', UPDATE_USER_API, fields=data)
+        resp = json.loads(resp.data.decode('utf-8'))
+
+        print(resp)
     
     def write_rsa_keys_users_db(self, index, public_rsa, private_rsa):
         with open(__main__.get_path('assets/users.json')) as file:

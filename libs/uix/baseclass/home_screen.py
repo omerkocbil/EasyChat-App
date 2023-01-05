@@ -5,7 +5,9 @@ from components.dialog import PDialog
 from components.screen import PScreen
 from key import aes_key as AES
 
-import requests
+import urllib3
+http = urllib3.PoolManager()
+
 import json
 
 import os
@@ -26,8 +28,8 @@ class HomeScreen(PScreen):
         self.chats = []
         
         GET_CHATS_API = "http://54.144.168.5/api/getchats/"
-        resp = requests.get(url=GET_CHATS_API)
-        self.data = resp.json()
+        resp = http.request('GET', GET_CHATS_API)
+        self.data = json.loads(resp.data.decode('utf-8'))
         
         #self.data = sorted(self.data, key=lambda x: x['last_activity'])
         
@@ -69,8 +71,9 @@ class HomeScreen(PScreen):
     
     def get_name_and_title(self, username):
         GET_USER_API = "http://54.144.168.5/api/user"
-        resp = requests.get(url=GET_USER_API)
-        data = resp.json()
+
+        resp = http.request('GET', GET_USER_API)
+        data = json.loads(resp.data.decode('utf-8'))
         
         for user in data:
             if user['username'] == username:
@@ -78,8 +81,9 @@ class HomeScreen(PScreen):
     
     def check_notification(self, chat_id):
         GET_NOTIF_API = "http://54.144.168.5/api/notification/"
-        resp = requests.get(url=GET_NOTIF_API, params={'username': self.user['username']})
-        resp = resp.json()
+
+        resp = http.request('GET', GET_NOTIF_API, fields={'username': self.user['username']})
+        resp = json.loads(resp.data.decode('utf-8'))
         
         is_exist = False
         message, sender = "", ""
