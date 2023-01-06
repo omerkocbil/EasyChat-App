@@ -72,7 +72,7 @@ class ChatScreen(PScreen):
                 'username': self.user['username'],
                 'message': AES.encrypt(text, self.aes['key'], self.aes['nonce'])}
 
-        resp = http.request('GET', SEND_MSG_API, fields=data)
+        resp = http.request('POST', SEND_MSG_API, fields=data)
         
         self.chat_logs.append(
             {"text": '[color=000000]' + text, "send_by_user": True, "pos_hint": {"right": 1}}
